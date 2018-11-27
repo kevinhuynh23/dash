@@ -1,29 +1,56 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app 
+  style="background: gray;"
+  >
+      <!-- <Menu/> -->
+      <MetricSidebar/>
+
+    <v-toolbar app id="header">
+      <v-toolbar-title class="headline center text-uppercase">
+        <span id="t1">Square</span>
+        <span id="t2" class="font-weight-light">DASHBOARD</span>
+      </v-toolbar-title>
+    </v-toolbar>
+
+      <div>
+        <CardGrid/>
+      </div>
+
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+import CardGrid from './components/CardGrid'
+import Menu from './components/SideBar'
+import MetricSidebar from './components/MetricSidebar'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import Card from './components/Card'
+import 'es6-promise/auto';
+
+Vue.use(Vuex)
+
+export default {
+  name: 'App',
+  components: {
+    CardGrid,
+    Menu,
+    MetricSidebar,
+    Card
   }
 }
+</script>
+
+<style>
+
+#t1 {
+  color: rgb(90, 200, 250);
+}
+#sidebar {
+  z-index: 1000;
+}
+v-app {
+  background-color: lightgrey;
+}
+
 </style>
