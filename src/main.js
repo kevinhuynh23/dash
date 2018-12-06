@@ -5,8 +5,12 @@ import router from './router';
 import {store} from './store';
 import Vuex from 'vuex';
 import 'es6-promise/auto';
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
 
 Vue.use(Vuex)
+Vue.use(VueMaterial)
 
 Vue.config.productionTip = false
 

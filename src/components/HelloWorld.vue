@@ -1,4 +1,5 @@
 <template>
+<!-- Whenever I try deleting this file, the webpage won't render. Anyone know how to fix this? -->
   <v-card>
     <v-img
       src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
