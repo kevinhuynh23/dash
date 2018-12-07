@@ -1,5 +1,5 @@
 <template>
-  <v-app 
+  <v-app
   style="background: gray;"
   >
       <!-- <Menu/> -->
