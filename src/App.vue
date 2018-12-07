@@ -26,6 +26,7 @@ import MetricSidebar from './components/MetricSidebar'
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Card from './components/Card'
+import SidebarMenu from './components/SidebarMenu'
 import 'es6-promise/auto';
 Vue.use(Vuex)
 export default {
@@ -34,7 +35,8 @@ export default {
     CardGrid,
     Menu,
     MetricSidebar,
-    Card
+    Card,
+    SidebarMenu
   }
 }
 </script>
