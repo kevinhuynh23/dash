@@ -8,8 +8,8 @@ export const store = new Vuex.Store({
   state: {
     title: 'Metric',
     freq: ['Hour', 'Week', 'Month', 'Year'],
-    sources: ['Google', 'Facebook', 'Bing'],
-    dates: ['Jan', 'Feb', 'March', 'Apr', 'May']
+    data: null,
+    path: 'Testing'
   },
   mutations: { //always synchronous
     

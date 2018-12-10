@@ -1,5 +1,5 @@
 <template>
-<!-- This component renders the example sidebar. -->
+<!-- Just mock data, delete later. -->
     <sidebar-menu :menu="menu"/>
 </template>
 

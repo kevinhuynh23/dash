@@ -1,8 +1,7 @@
 
 <template>
-<!-- This component renders the table on the bottom of the dashboard. -->
+<!-- Just mock data, delete later. -->
 <div>
-    <h2>{{title}}</h2>
     <v-data-table 
         :headers="headers"
         :items="items"

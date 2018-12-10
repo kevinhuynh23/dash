@@ -1,4 +1,5 @@
 <template>
+<!-- Just mock data, delete later. -->
     <LineChart
         :labels="['January', 'February', 'March', 'April', 'May']"
         :datasets="$options.datasets"
@@ -43,7 +44,6 @@ export default {
         LineChart
     }
 }
-
 </script>
 
 <style>

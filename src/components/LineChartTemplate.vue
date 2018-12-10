@@ -1,4 +1,5 @@
 <template>
+<!-- Just mock data, delete later. -->
     <canvas ref="myChart"></canvas>
 </template>
 
