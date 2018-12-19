@@ -9,15 +9,10 @@ export const store = new Vuex.Store({
     title: 'Metric',
     freq: ['Hour', 'Week', 'Month', 'Year'],
     data: null,
-    path: 'Testing'
-  },
-  mutations: { //always synchronous
-    
-  },
-  actions: { // or asynchronous
-    
-  },
-  getters: { // get all the same thing, all components can grab, less repetition
-    
+    apiObject: {},
+    startTime: 0,
+    endTime: 1545184480293,
+    path: '',
+    dataType: ''
   }
 })

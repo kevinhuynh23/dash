@@ -32,6 +32,8 @@ export default {
   methods: {
     changeTitle(title) {
       this.$store.state.title = title;
+      this.$store.state.dataType = 'page-view';
+      console.log(this.$store.state.dataType)
     }
   }
 }

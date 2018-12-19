@@ -14,18 +14,27 @@
               
 							<!-- Allows the user to change the path field of the data shown. -->
 							<v-text-field
-								label="Path"
-								v-model="path"
+								label="API"
+								v-model="api"
 								class="selection left"
 							></v-text-field>
 
+							<v-btn @click="fetchData()">Add API</v-btn>
+
+							<v-text-field
+								label="Path"
+								v-model="path"
+								class="selection"
+								@change="getPath()"
+							></v-text-field>
+
 							<!-- Allows the user to change the frequency of the data shown. -->
-							<v-select 
-                :items="this.$store.state.freq"
-                label="Frequency"
-                class="selection"
-                v-model="freq"
-							></v-select>
+							<!-- <v-select 
+								:items="this.$store.state.freq"
+								label="Frequency"
+								class="selection"
+								v-model="freq"
+							></v-select> -->
 
 							<!-- Allows the user to pick the date range for the desired data. Choose between two datepickers for begin & end dates or a date range picker.-->
 							<!-- <date-picker 
@@ -46,6 +55,7 @@
 								range lang="en" 
 								width="250px" 
 								class="date selection"
+								@change="convertDate()"
 							></date-picker>
 						</v-layout>
 					</v-container>
@@ -55,14 +65,15 @@
 				</v-card>
 
 				<!-- These are buttons to test the api calls. Delete later. -->
-				<!-- <v-btn @click="fetchData('metrics')">metrics</v-btn>
-				<v-btn @click="fetchData('sources')">sources</v-btn> -->
+				
+				<v-btn @click="readMetrics()">Read Metrics</v-btn>
+				<v-btn @click="datasets('http://localhost:9259')">Test</v-btn>
 
 				<!-- This renders the second card that includes the data table. Insert the d3 table here when ready. -->
 				<v-card class="card">
-          <h2>{{title}}</h2>
+          			<h2>{{title}}</h2>
 					<Table/>
-					<!-- {{api}} -->
+					<!-- {{dateRange}} -->
 				</v-card>
 			</v-flex>
 		</v-layout>
@@ -74,22 +85,39 @@ import Chart from '../components/Chart' //Mock data, must replace
 import Table from '../components/Table' //''
 import axios from 'axios'
 import DatePicker from 'vue2-datepicker'
+import _ from 'lodash'
 
 export default {
 	name: 'cards',
 	data() {
 		return {
-			api: null,
-			path: 'Test', //Default value
+			sampleApi: null,
+			sourcesApi: null,
+			metricsApi: null,
+			api: null,//need
+			sources: null,
+			metrics: null,
+			paths: {},
+			timestamps: null,
+			path: '', //Default value
 			freq: 'Hmm', //''
 			startDate: null,
 			endDate: null,
-			dateRange: null
+			dateRange: null,
+			index: 0
 		}
 	},
 	computed: {
 		title() {
 			return this.$store.state.title;
+		},
+		path: {
+			get() {
+				return this.$store.state.path
+			},
+			set(value) {
+				this.$store.commit('path', value)
+			}
 		}
 	},
 	components: {
@@ -99,19 +127,143 @@ export default {
 	},
 	//This is the initial api call.
 	mounted () {
+
+		//Fetches page view data.
+		// axios
+		// 	.get('http://localhost:9259/data/page-view')
+		// 	.then(response => (this.sampleApi = response.data))
+		// 	.catch(error => console.log(error))
+
+		//Fetches sources.
 		axios
-			.get('http://localhost:9259/data/page-view')
-			.then(response => (this.api = response.data))
+			.get('http://localhost:9259/sources')
+			.then(response => (this.sourcesApi = response.data))
+			.catch(error => console.log(error))
+		
+		//Fetches metrics.
+		axios
+			.get('http://localhost:9259/metrics')
+			.then(response => (this.metricsApi = response.data))
 			.catch(error => console.log(error))
 	},
-	//This helps filter through the api path for metrics and sources.
+	//This helps filter through the api path for metrics and sources. Delete later.
 	methods: {
-		fetchData(x) {
+		//Don't need this, delete later. This was just for testing.
+		// fetchData(x) {
+		// 	axios
+		// 		.get('http://localhost:9259/' + x)
+		// 		.then(response => (this.sampleApi = response.data))
+		// 		.catch(error => console.log(error))
+		// },
+		readApi() {
+			this.paths = _.map(this.sampleApi, 'path')
+			this.timestamps = _.map(this.sample.Api, 'timestamp')
+		},
+		readSources() {
+			this.sourcesApi = _.map(this.sourcesApi, 'displayName')
+		},
+		readMetrics() {
+			this.metricsApi = _.map(this.metricsApi, 'name')
+			console.log(this.metricsApi)
+		},
+		fetchData() {
 			axios
-				.get('http://localhost:9259/' + x)
-				.then(response => (this.api = response.data))
-				.catch(error => console.log(error))
-		}
+			.get(this.api)
+			.then(response => (this.sampleApi = response.data['facebook-analytics']))
+			.catch(error => console.log(error))
+			console.log(this.api)
+			this.$store.commit('paths', this.$store.state.apiObject[this.index] = this.api);
+			this.api= ''
+			this.index++
+			console.log(this.$store.state.apiObject)
+		},
+		convertDate() {
+			let startTime = Date.parse(this.dateRange[0]);
+			let endTime = Date.parse(this.dateRange[1]);
+			this.$store.state.startTime = startTime;
+			this.$store.state.endTime = endTime;
+		},
+		getPath() {
+			let path = this.path;
+			this.$store.state.path = path;
+			console.log(this.$store.state.path)
+		},
+		datasets(api) {
+			console.log('pls');
+    let sources = api + "/sources";
+	let data = api + "/data/" + this.$store.state.dataType;
+
+    let srcJson = {};
+    let datasets = []
+    axios
+        .get(sources)
+        .then((response) => {
+			console.log(response.data);
+			srcJson = response.data
+			})
+		.catch((err) => console.log(err.message));
+		
+	console.log(srcJson)
+    for(let src in sources) {
+        datasets.push(this.dataset(src.name, data));
+	};
+	
+	console.log(datasets);
+    return datasets;
+},
+dataset(source, data) {
+    let dataset = {
+        label: source,
+        borderColor:'rgba(0, 122, 255, .5)',
+        background:'rgba(0, 122, 255, .1)',
+        data:[]
+    }  
+    let sortable = [];
+	let dataTemp = {} 
+	axios
+        .get(data)
+		.then((response) => {
+			dataTemp = response;
+		})
+		.catch((err) => console.log(err.message));
+	console.log(dataTemp);
+
+    for(let d in dataTemp[source]) {
+		console.log(d);
+        if(d.path == this.$store.state.dataType) {
+            sortable.push([d.path, d.timestamp]);
+        }
+    }
+    sortable.sort((a, b) => {
+        return a[1]- b[1];
+    });
+    let start = this.$store.state.startTime;
+    let end = this.$store.state.endTime;
+    let numInc = 5;
+    let increment = (end - start) / numInc;
+    let cur = start;
+	let breaks = [];
+    breaks.push(start);
+    for(let i = 0; i < numInc; i++) {
+        cur += increment;
+        breaks.push(cur)
+	}
+	console.log(breaks);
+    let j = 0;
+    for(let i = 0; i < breaks.length - 1; i++) {
+        let count = 0;
+        while(true) {
+            if(breaks[i] <= sortable[j][1] && sortable[j][1] <= breaks[i + 1]) {
+                j++;
+                count++;
+            } else {
+                break;
+            }
+        }
+        dataset.data.push(count);
+    }
+    return dataset;
+}
 	}
 }  
 </script>
