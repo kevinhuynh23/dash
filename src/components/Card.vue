@@ -136,10 +136,11 @@ export default {
 			this.$store.commit('addApi', this.api);
 			this.api= ''
 			// this.index++
-			for(let i = 0; i < this.$store.apiObject.length; i++ ){
-				datasets(this.$store.apiObject[i]);
+			for(let i = 0; i < this.$store.state.apiObject.length; i++ ){
+				this.datasets(this.$store.state.apiObject[i]);
 			}
 		},
+		
 		convertDate() {
 			let startTime = Date.parse(this.dateRange[0]);
 			let endTime = Date.parse(this.dateRange[1]);
