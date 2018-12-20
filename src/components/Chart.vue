@@ -1,7 +1,7 @@
 <template>
 <!-- Just mock data, delete later. -->
     <LineChart
-        :labels="['January', 'February', 'March', 'April', 'May']"
+        :labels="['1', '2', '3', '4', '5']"
         :datasets="$options.datasets"
         :options="$options.options"
     ></LineChart>
@@ -11,12 +11,14 @@
 import LineChart from '../components/LineChartTemplate'; 
 import numeral from 'numeral';
 
+
+
 const datasets = [
     {
         label: 'Facebook',
         borderColor: 'rgba(0, 122, 255, .5)',
         backgroundColor: 'rgba(0, 122, 255, .1)',
-        data: [300, 700, 450, 750, 450]
+        data: [0, 0, 0, 0, 0]
     },
     {
         label: 'Google',
@@ -25,6 +27,7 @@ const datasets = [
         data: [600, 550, 750, 250, 700]
     }
 ];
+// const datasets = datasets('http://localhost:9259')
 
 const options = {
     scales: {
@@ -45,7 +48,7 @@ const options = {
 };
 
 export default {
-    name: 'MyChart',
+    name: 'myChart',
     datasets,
     options,
     components: {

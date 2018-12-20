@@ -44,9 +44,14 @@ export default {
   methods: {
     changeTitle(title) {
       this.$store.state.title = title;
+<<<<<<< HEAD
     },
     mouseOver: function() {
       this.active = !this.active;
+=======
+      this.$store.state.dataType = 'page-view';
+      console.log(this.$store.state.dataType)
+>>>>>>> 6434d1d19f30603d0a3caea447b62bb4f117231c
     }
   }
 }
