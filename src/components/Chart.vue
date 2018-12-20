@@ -11,6 +11,8 @@
 import LineChart from '../components/LineChartTemplate'; 
 import numeral from 'numeral';
 
+
+
 const options = {
     scales: {
         yAxes: [{
@@ -36,7 +38,7 @@ export default {
         LineChart
     },
     computed: {
-        datasets() {
+        datasets (){
             return this.$store.state.datasets;
         }
     }

@@ -8,7 +8,6 @@
 					<!-- This container includes the header that has controls for the content of the cards. -->
 					<v-container fluid grid-list>
 						<v-layout align-right row>
-
 							<h2>{{title}}</h2>
               
 							<!-- Allows the user to change the path field of the data shown. -->
@@ -38,7 +37,7 @@
 					</v-container>
 
 					<!-- This renders the line graph displaying the data. Input the d3 graph here when ready. -->
-					<Chart/>
+					<Chart id="line-graph"/>
 				</v-card>
 
 				<!-- These are buttons to test the api calls. Delete later. -->
@@ -134,7 +133,6 @@ export default {
 			this.$store.commit('paths', this.$store.state.apiObject[this.index] = this.api);
 			this.api= ''
 			this.index++
-			console.log(this.$store.state.apiObject)
 		},
 		convertDate() {
 			let startTime = Date.parse(this.dateRange[0]);
@@ -143,11 +141,10 @@ export default {
 			this.$store.state.endTime = endTime;
 		},
 		getPath() {
-			let userPath = this.path;
-			this.$store.state.path = userPath;
-			console.log(this.$store.state.path)
+			let path = this.path;
+			this.$store.state.path = path;
 		},
-	datasets(api) {
+		datasets(api) {
 			let sources = api + "/sources";
 			let data = api + "/data/" + this.$store.state.dataType;
 
@@ -160,24 +157,23 @@ export default {
 				})
 				.then((sourceSet) => {
 					for(let i = 0; i < sourceSet.length; i++) {
-						datasets.push(this.dataset(sourceSet[i].name, data))
+						datasets.push(this.dataset(sourceSet[i], data))
 					}
 				})
 				.catch((err) => console.log(err.message));
 
-			this.$store.state.dataset = datasets;
-			console.log(this.$store.state.dataset)
+			this.$store.commit('updateChart', datasets);
 		},
 
 		dataset(source, data) {
 
 			let dataset = {
-				label: source,
+				label: source.displayName,
 				borderColor:'rgba(0, 122, 255, .5)',
 				backgroundColor:'rgba(0, 122, 255, .1)',
 				data:[]
 			}
-
+			
 			axios
 				.get(data)
 				.then((response) => {
@@ -185,9 +181,9 @@ export default {
 				})
 				.then((data) => {
 					let sortable = [];
-					for(let i = 0; i < data[source].length; i++) {
-						if(data[source][i].path == this.$store.state.path) {
-							sortable.push([data[source][i].path, data[source][i].timestamp])
+					for(let i = 0; i < data[source.name].length; i++) {
+						if(data[source.name][i].path == this.$store.state.path) {
+							sortable.push([data[source.name][i].path, data[source.name][i].timestamp])
 						}
 					}
 					sortable.sort((a, b) => {
@@ -234,11 +230,14 @@ export default {
 			return data;
 		}
 	}
-}
+}  
 </script>
 
 <style>
 /* Formatting */
+#line-graph {
+	padding: 1rem;
+}
 .selection {
   padding-left: 20px;
 }

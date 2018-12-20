@@ -76,6 +76,8 @@ export default {
                 count++;
             }
 
+            console.log(labels);
+
             return labels;
         }
     },
