@@ -61,6 +61,7 @@ export default {
 #sidebar {
   z-index: 1000;
 }
+
 .v-toolbar-title {
   z-index: 1000;
 }

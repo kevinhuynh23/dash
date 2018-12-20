@@ -45,6 +45,7 @@ export default {
                 }
                 items.push(source);
             }
+            console.log(items);
             return items;
         },
         headers() {
@@ -81,9 +82,7 @@ export default {
                 labels.push({text:breaks[i], value:count});
                 count++;
             }
-
             console.log(labels);
-
             return labels;
         }
     },
