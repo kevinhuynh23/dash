@@ -9,9 +9,11 @@
     >
         <template slot="items" slot-scope="props">
             <td>{{props.item.name}}</td>
-            <td>{{props.item.a}} </td>
-            <td>{{props.item.b}}</td>
-            <td>{{props.item.c}}</td>
+            <td>{{props.item[0]}} </td>
+            <td>{{props.item[1]}}</td>
+            <td>{{props.item[2]}}</td>
+            <td>{{props.item[3]}}</td>
+            <td>{{props.item[4]}}</td>
         </template>
     </v-data-table>
 </div>
@@ -40,6 +42,7 @@ export default {
                 }
                 items.push(source);
             }
+            console.log(items);
             return items;
         },
         headers() {
@@ -76,9 +79,7 @@ export default {
                 labels.push({text:breaks[i], value:count});
                 count++;
             }
-
             console.log(labels);
-
             return labels;
         }
     },

@@ -70,7 +70,9 @@
 
 				<!-- This renders the second card that includes the data table. Insert the d3 table here when ready. -->
 				<v-card class="card">
-          			<h2>{{title}}</h2>
+					<v-container fluid grid-list>
+          				<h2>{{title}}</h2>
+					</v-container>
 					<Table/>
 					<!-- {{dateRange}} -->
 				</v-card>
@@ -214,7 +216,7 @@ export default {
 				backgroundColor:'rgba(0, 122, 255, .1)',
 				data:[]
 			}
-			
+
 			axios
 				.get(data)
 				.then((response) => {
@@ -293,6 +295,6 @@ export default {
 	margin-left: 50px;
 }
 #cards {
-	margin-top: 25px;
+	margin-top: 60px;
 }
 </style>
