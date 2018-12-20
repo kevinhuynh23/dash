@@ -9,21 +9,19 @@ export const store = new Vuex.Store({
     title: 'Metric',
     freq: ['Hour', 'Week', 'Month', 'Year'],
     data: null,
-    apiObject: {},
+    apiObject: [],
     startTime: 0,
     endTime: 1545184480293,
     path: '',
     dataType: '',
-<<<<<<< HEAD
-    datasets: []
-    //
-=======
     datasets:[]
   },
   mutations: {
     updateChart (state, data) {
       state.datasets = data;
+    },
+    addApi(state, api) {
+      state.apiObject.push(api)
     }
->>>>>>> f874777902648637aba8a31a4cefffa8901cfc4f
   }
 });

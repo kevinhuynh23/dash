@@ -6,18 +6,24 @@
         :items="items"
         class="elevation-1"
     >
+    
         <template slot="items" slot-scope="props">
             <td>{{props.item.name}}</td>
-            <td>{{props.item.a}} </td>
-            <td>{{props.item.b}}</td>
-            <td>{{props.item.c}}</td>
+            <td>{{props.item[0]}} </td>
+            <td>{{props.item[1]}}</td>
+            <td>{{props.item[2]}}</td>
+            <td>{{props.item[3]}}</td>
+            <td>{{props.item[4]}}</td>
+            
         </template>
     </v-data-table>
 </div>
 </template>
 
 <script>
-import vuetify from 'vuetify'
+import vuetify from 'vuetify';
+import moment from 'moment';
+
 
 export default {
     name: 'Table',
@@ -53,7 +59,7 @@ export default {
 
             for(let i = 0; i < numInc; i++) {
                 cur += increment;
-                breaks.push(cur)
+                breaks.push(moment(cur).format("MMM Do YY"))
             }
 
             // breaks.map((time) => {
@@ -83,7 +89,7 @@ export default {
     },
     data() {
         return {
-    
+            count: 5
         }
     }
 }

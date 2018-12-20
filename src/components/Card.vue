@@ -32,6 +32,7 @@
 								width="250px" 
 								class="date selection"
 								@change="convertDate()"
+								@clear="clearDate()"
 							></date-picker>
 						</v-layout>
 					</v-container>
@@ -42,8 +43,8 @@
 
 				<!-- These are buttons to test the api calls. Delete later. -->
 				
-				<v-btn @click="readMetrics()">Read Metrics</v-btn>
-				<v-btn @click="datasets('http://localhost:9259')">Test</v-btn>
+				<!-- <v-btn @click="readMetrics()">Read Metrics</v-btn>
+				<v-btn @click="datasets('http://localhost:9259')">Test</v-btn> -->
 
 				<!-- This renders the second card that includes the data table. Insert the d3 table here when ready. -->
 				<v-card class="card">
@@ -69,8 +70,8 @@ export default {
 		return {
 			api: null,//need
 			path: '', //Default value
-			dateRange: null,
-			index: 0
+			dateRange: null
+			// index: 0
 		}
 	},
 	computed: {
@@ -125,18 +126,27 @@ export default {
 			console.log(this.metricsApi)
 		},
 		fetchData() {
-			axios
-			.get(this.api)
-			.then(response => (this.sampleApi = response.data['facebook-analytics']))
-			.catch(error => console.log(error))
-			console.log(this.api)
-			this.$store.commit('paths', this.$store.state.apiObject[this.index] = this.api);
+			// axios
+			// .get(this.api)
+			// .then(response => (this.sampleApi = response.data['facebook-analytics']))
+			// .catch(error => console.log(error))
+			// console.log(this.api)
+			this.$store.commit('addApi', this.api);
 			this.api= ''
-			this.index++
+			// this.index++
+			for(let i = 0; i < this.$store.apiObject.length; i++ ){
+				datasets(this.$store.apiObject[i]);
+			}
 		},
 		convertDate() {
 			let startTime = Date.parse(this.dateRange[0]);
 			let endTime = Date.parse(this.dateRange[1]);
+			this.$store.state.startTime = startTime;
+			this.$store.state.endTime = endTime;
+		},
+		clearDate() {
+			let startTime = 0;
+			let endTime = 1545184480293;
 			this.$store.state.startTime = startTime;
 			this.$store.state.endTime = endTime;
 		},
@@ -191,6 +201,7 @@ export default {
 					});
 
 					return sortable;
+
 
 				})
 				.then((sortable) => {
