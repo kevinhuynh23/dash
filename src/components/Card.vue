@@ -51,7 +51,7 @@
 					</v-container>
 
 					<!-- This renders the line graph displaying the data. Input the d3 graph here when ready. -->
-					<Chart/>
+					<Chart id="line-graph"/>
 				</v-card>
 
 				<!-- These are buttons to test the api calls. Delete later. -->
@@ -60,7 +60,9 @@
 
 				<!-- This renders the second card that includes the data table. Insert the d3 table here when ready. -->
 				<v-card class="card">
-          <h2>{{title}}</h2>
+					<v-container fluid grid-list>
+						<h2>{{title}}</h2>
+					</v-container>
 					<Table/>
 					<!-- {{api}} -->
 				</v-card>
@@ -118,6 +120,9 @@ export default {
 
 <style>
 /* Formatting */
+#line-graph {
+	padding: 1rem;
+}
 .selection {
   padding-left: 20px;
 }

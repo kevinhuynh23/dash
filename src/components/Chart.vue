@@ -32,7 +32,15 @@ const options = {
             ticks: {
                 beginAtZero: true,
             }
-        }]
+        }],
+    layout: {
+        padding: {
+            left:50,
+            right:50,
+            top:50,
+            bottom:50
+        },
+    }
   },
 };
 
