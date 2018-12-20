@@ -26,54 +26,65 @@ export default {
   computed: {
       title() {
           return this.$store.state.title;
-      }
-  },
-    data() {
-        return {
-            // Mock data
-            headers: [
+      },
+      
+      items() {
+          let items = [];
+            for(let i = 0; i < this.$store.state.datasets.length; i++ ){
+                let source = {
+                    value: false,
+                    name: this.$store.state.datasets[i].label,
+                }
+                for(let j = 0; j < this.$store.state.datasets[i].data.length; j++) {
+                    source[j] = this.$store.state.datasets[i].data[j];
+                }
+                items.push(source);
+            }
+            return items;
+        },
+        headers() {
+            let start = this.$store.state.startTime;
+            let end = this.$store.state.endTime;
+
+            let numInc = 5;
+            let increment = (end - start) / numInc;
+
+            let cur = start;
+            let breaks = [];
+
+            for(let i = 0; i < numInc; i++) {
+                cur += increment;
+                breaks.push(cur)
+            }
+
+            // breaks.map((time) => {
+
+            // })
+
+            let labels = [
                 {
                     text: '',
                     align: 'left',
                     sortable: false,
                     value: 'name'
                 },
-                {
-                    text: 'Page Views',
-                    value: 'a'
-                },
-                {
-                    text: 'Sign-Ups',
-                    value: 'b'
-                },
-                {
-                    text: 'Ad-Block',
-                    value: 'c'
-                }
-            ],
-            items: [
-                {
-                    value: false,
-                    name: 'Google Analytics',
-                    a: 354225,
-                    b: 5839,
-                    c: 342
-                },
-                {
-                    value: false,
-                    name: 'Facebook Analytics',
-                    a: 93775,
-                    b: 38349,
-                    c: 4329
-                },
-                {
-                    value: false,
-                    name: 'Bing Analytics',
-                    a: 5939,
-                    b: 5493,
-                    c: 1234
-                }
-            ]
+            ];
+
+            let count = 0;
+
+            for(let i = 0; i < breaks.length; i++) {
+                labels.push({text:breaks[i], value:count});
+                count++;
+            }
+
+            console.log(labels);
+
+            return labels;
+        }
+    },
+    data() {
+        return {
+    
         }
     }
 }

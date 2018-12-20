@@ -8,7 +8,6 @@
 					<!-- This container includes the header that has controls for the content of the cards. -->
 					<v-container fluid grid-list>
 						<v-layout align-right row>
-
 							<!-- A reactive title based off of the metric chosen. {{path}} {{freq}} {{startDate}} for testing v-model. -->
 							<h2>{{title}}</h2>
               
@@ -71,13 +70,7 @@
 
 				<!-- This renders the second card that includes the data table. Insert the d3 table here when ready. -->
 				<v-card class="card">
-<<<<<<< HEAD
-					<v-container fluid grid-list>
-						<h2>{{title}}</h2>
-					</v-container>
-=======
           			<h2>{{title}}</h2>
->>>>>>> 6434d1d19f30603d0a3caea447b62bb4f117231c
 					<Table/>
 					<!-- {{dateRange}} -->
 				</v-card>
@@ -181,7 +174,6 @@ export default {
 			this.$store.commit('paths', this.$store.state.apiObject[this.index] = this.api);
 			this.api= ''
 			this.index++
-			console.log(this.$store.state.apiObject)
 		},
 		convertDate() {
 			let startTime = Date.parse(this.dateRange[0]);
@@ -192,84 +184,92 @@ export default {
 		getPath() {
 			let path = this.path;
 			this.$store.state.path = path;
-			console.log(this.$store.state.path)
 		},
 		datasets(api) {
-			console.log('pls');
-    let sources = api + "/sources";
-	let data = api + "/data/" + this.$store.state.dataType;
+			let sources = api + "/sources";
+			let data = api + "/data/" + this.$store.state.dataType;
 
-    let srcJson = {};
-    let datasets = []
-    axios
-        .get(sources)
-        .then((response) => {
-			console.log(response.data);
-			srcJson = response.data
-			})
-		.catch((err) => console.log(err.message));
-		
-	console.log(srcJson)
-    for(let src in sources) {
-        datasets.push(this.dataset(src.name, data));
-	};
-	
-	console.log(datasets);
-    return datasets;
-},
-dataset(source, data) {
-    let dataset = {
-        label: source,
-        borderColor:'rgba(0, 122, 255, .5)',
-        background:'rgba(0, 122, 255, .1)',
-        data:[]
-    }  
-    let sortable = [];
-	let dataTemp = {} 
-	axios
-        .get(data)
-		.then((response) => {
-			dataTemp = response;
-		})
-		.catch((err) => console.log(err.message));
-	console.log(dataTemp);
+			let datasets = []
 
-    for(let d in dataTemp[source]) {
-		console.log(d);
-        if(d.path == this.$store.state.dataType) {
-            sortable.push([d.path, d.timestamp]);
-        }
-    }
-    sortable.sort((a, b) => {
-        return a[1]- b[1];
-    });
-    let start = this.$store.state.startTime;
-    let end = this.$store.state.endTime;
-    let numInc = 5;
-    let increment = (end - start) / numInc;
-    let cur = start;
-	let breaks = [];
-    breaks.push(start);
-    for(let i = 0; i < numInc; i++) {
-        cur += increment;
-        breaks.push(cur)
-	}
-	console.log(breaks);
-    let j = 0;
-    for(let i = 0; i < breaks.length - 1; i++) {
-        let count = 0;
-        while(true) {
-            if(breaks[i] <= sortable[j][1] && sortable[j][1] <= breaks[i + 1]) {
-                j++;
-                count++;
-            } else {
-                break;
-            }
-        }
-        dataset.data.push(count);
-    }
-    return dataset;
-}
+			axios
+				.get(sources)
+				.then((response) => {
+					return response.data
+				})
+				.then((sourceSet) => {
+					for(let i = 0; i < sourceSet.length; i++) {
+						datasets.push(this.dataset(sourceSet[i], data))
+					}
+				})
+				.catch((err) => console.log(err.message));
+
+			this.$store.commit('updateChart', datasets);
+		},
+
+		dataset(source, data) {
+
+			let dataset = {
+				label: source.displayName,
+				borderColor:'rgba(0, 122, 255, .5)',
+				backgroundColor:'rgba(0, 122, 255, .1)',
+				data:[]
+			}
+			
+			axios
+				.get(data)
+				.then((response) => {
+					return response.data
+				})
+				.then((data) => {
+					let sortable = [];
+					for(let i = 0; i < data[source.name].length; i++) {
+						if(data[source.name][i].path == this.$store.state.path) {
+							sortable.push([data[source.name][i].path, data[source.name][i].timestamp])
+						}
+					}
+					sortable.sort((a, b) => {
+						return a[1]- b[1];
+					});
+
+					return sortable;
+
+				})
+				.then((sortable) => {
+					dataset.data = this.parseDataset(sortable);
+				})
+				.catch((err) => console.log(err.message));
+			
+			return dataset;
+		},
+		parseDataset(sortable) {
+			let data = [];
+			let start = this.$store.state.startTime;
+			let end = this.$store.state.endTime;
+
+			let numInc = 5;
+			let increment = (end - start) / numInc;
+
+			let cur = start;
+			let breaks = [];
+
+			breaks.push(start);
+
+			for(let i = 0; i < numInc; i++) {
+				cur += increment;
+				breaks.push(cur)
+			}
+
+			for(let i = 0; i < breaks.length - 1; i++) {
+				let count = 0;
+				for(let j = 0; j < sortable.length; j++) {
+					if(breaks[i] <= sortable[j][1] && sortable[j][1] <= breaks[i + 1]) {
+						count++;
+					}
+				}
+				data.push(count);
+			}
+			return data;
+		}
 	}
 }  
 </script>

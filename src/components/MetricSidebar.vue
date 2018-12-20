@@ -2,14 +2,14 @@
 <!-- This renders the metric icons on the sidebar. -->
   <div id="wrapper">
     <v-tooltip right>
-      <v-btn slot="activator" @click="changeTitle('Page Views')" fab dark color="rgb(90, 200, 250)">
+      <v-btn slot="activator" @click="changeTitle('Page View')" fab dark color="rgb(90, 200, 250)">
           <v-icon>far fa-eye</v-icon>
       </v-btn>
       <span>Page Views</span>
     </v-tooltip>
     
     <v-tooltip right>
-      <v-btn slot="activator" @click="changeTitle('Sign Ups')" fab dark color="rgb(90, 200, 250)">
+      <v-btn slot="activator" @click="changeTitle('Sign Up')" fab dark color="rgb(90, 200, 250)">
         <v-icon>fas fa-user-plus</v-icon>
       </v-btn>
       <span>Sign Ups</span>
@@ -44,14 +44,9 @@ export default {
   methods: {
     changeTitle(title) {
       this.$store.state.title = title;
-<<<<<<< HEAD
-    },
-    mouseOver: function() {
-      this.active = !this.active;
-=======
-      this.$store.state.dataType = 'page-view';
-      console.log(this.$store.state.dataType)
->>>>>>> 6434d1d19f30603d0a3caea447b62bb4f117231c
+      let lowerTitle = title.toLowerCase();
+      let dataType = lowerTitle.replace(" ", "-");
+      this.$store.state.dataType = dataType;
     }
   }
 }
