@@ -9,7 +9,6 @@
 					<v-container fluid grid-list>
 						<v-layout align-right row>
 
-							<!-- A reactive title based off of the metric chosen. {{path}} {{freq}} {{startDate}} for testing v-model. -->
 							<h2>{{title}}</h2>
               
 							<!-- Allows the user to change the path field of the data shown. -->
@@ -27,28 +26,6 @@
 								class="selection"
 								@change="getPath()"
 							></v-text-field>
-
-							<!-- Allows the user to change the frequency of the data shown. -->
-							<!-- <v-select 
-								:items="this.$store.state.freq"
-								label="Frequency"
-								class="selection"
-								v-model="freq"
-							></v-select> -->
-
-							<!-- Allows the user to pick the date range for the desired data. Choose between two datepickers for begin & end dates or a date range picker.-->
-							<!-- <date-picker 
-								v-model="startDate" 
-								lang="en" 
-								class="date"
-								placeholder="Start Date"
-							></date-picker>
-							<date-picker 
-								v-model="endDate" 
-								lang="en" 
-								class="date"
-								placeholder="End Date"
-							></date-picker> -->
 
 							<date-picker 
 								v-model="dateRange" 
@@ -91,18 +68,8 @@ export default {
 	name: 'cards',
 	data() {
 		return {
-			sampleApi: null,
-			sourcesApi: null,
-			metricsApi: null,
 			api: null,//need
-			sources: null,
-			metrics: null,
-			paths: {},
-			timestamps: null,
 			path: '', //Default value
-			freq: 'Hmm', //''
-			startDate: null,
-			endDate: null,
 			dateRange: null,
 			index: 0
 		}
@@ -110,14 +77,6 @@ export default {
 	computed: {
 		title() {
 			return this.$store.state.title;
-		},
-		path: {
-			get() {
-				return this.$store.state.path
-			},
-			set(value) {
-				this.$store.commit('path', value)
-			}
 		}
 	},
 	components: {
@@ -184,88 +143,98 @@ export default {
 			this.$store.state.endTime = endTime;
 		},
 		getPath() {
-			let path = this.path;
-			this.$store.state.path = path;
+			let userPath = this.path;
+			this.$store.state.path = userPath;
 			console.log(this.$store.state.path)
 		},
-		datasets(api) {
-			console.log('pls');
-    let sources = api + "/sources";
-	let data = api + "/data/" + this.$store.state.dataType;
+	datasets(api) {
+			let sources = api + "/sources";
+			let data = api + "/data/" + this.$store.state.dataType;
 
-    let srcJson = {};
-    let datasets = []
-    axios
-        .get(sources)
-        .then((response) => {
-			console.log(response.data);
-			srcJson = response.data
-			})
-		.catch((err) => console.log(err.message));
-		
-	console.log(srcJson)
-    for(let src in sources) {
-        datasets.push(this.dataset(src.name, data));
-	};
-	
-	console.log(datasets);
-    return datasets;
-},
-dataset(source, data) {
-    let dataset = {
-        label: source,
-        borderColor:'rgba(0, 122, 255, .5)',
-        background:'rgba(0, 122, 255, .1)',
-        data:[]
-    }  
-    let sortable = [];
-	let dataTemp = {} 
-	axios
-        .get(data)
-		.then((response) => {
-			dataTemp = response;
-		})
-		.catch((err) => console.log(err.message));
-	console.log(dataTemp);
+			let datasets = []
 
-    for(let d in dataTemp[source]) {
-		console.log(d);
-        if(d.path == this.$store.state.dataType) {
-            sortable.push([d.path, d.timestamp]);
-        }
-    }
-    sortable.sort((a, b) => {
-        return a[1]- b[1];
-    });
-    let start = this.$store.state.startTime;
-    let end = this.$store.state.endTime;
-    let numInc = 5;
-    let increment = (end - start) / numInc;
-    let cur = start;
-	let breaks = [];
-    breaks.push(start);
-    for(let i = 0; i < numInc; i++) {
-        cur += increment;
-        breaks.push(cur)
+			axios
+				.get(sources)
+				.then((response) => {
+					return response.data
+				})
+				.then((sourceSet) => {
+					for(let i = 0; i < sourceSet.length; i++) {
+						datasets.push(this.dataset(sourceSet[i].name, data))
+					}
+				})
+				.catch((err) => console.log(err.message));
+
+			this.$store.state.dataset = datasets;
+			console.log(this.$store.state.dataset)
+		},
+
+		dataset(source, data) {
+
+			let dataset = {
+				label: source,
+				borderColor:'rgba(0, 122, 255, .5)',
+				backgroundColor:'rgba(0, 122, 255, .1)',
+				data:[]
+			}
+
+			axios
+				.get(data)
+				.then((response) => {
+					return response.data
+				})
+				.then((data) => {
+					let sortable = [];
+					for(let i = 0; i < data[source].length; i++) {
+						if(data[source][i].path == this.$store.state.path) {
+							sortable.push([data[source][i].path, data[source][i].timestamp])
+						}
+					}
+					sortable.sort((a, b) => {
+						return a[1]- b[1];
+					});
+
+					return sortable;
+
+				})
+				.then((sortable) => {
+					dataset.data = this.parseDataset(sortable);
+				})
+				.catch((err) => console.log(err.message));
+			
+			return dataset;
+		},
+		parseDataset(sortable) {
+			let data = [];
+			let start = this.$store.state.startTime;
+			let end = this.$store.state.endTime;
+
+			let numInc = 5;
+			let increment = (end - start) / numInc;
+
+			let cur = start;
+			let breaks = [];
+
+			breaks.push(start);
+
+			for(let i = 0; i < numInc; i++) {
+				cur += increment;
+				breaks.push(cur)
+			}
+
+			for(let i = 0; i < breaks.length - 1; i++) {
+				let count = 0;
+				for(let j = 0; j < sortable.length; j++) {
+					if(breaks[i] <= sortable[j][1] && sortable[j][1] <= breaks[i + 1]) {
+						count++;
+					}
+				}
+				data.push(count);
+			}
+			return data;
+		}
 	}
-	console.log(breaks);
-    let j = 0;
-    for(let i = 0; i < breaks.length - 1; i++) {
-        let count = 0;
-        while(true) {
-            if(breaks[i] <= sortable[j][1] && sortable[j][1] <= breaks[i + 1]) {
-                j++;
-                count++;
-            } else {
-                break;
-            }
-        }
-        dataset.data.push(count);
-    }
-    return dataset;
 }
-	}
-}  
 </script>
 
 <style>
@@ -284,6 +253,6 @@ dataset(source, data) {
 	margin-left: 50px;
 }
 #cards {
-	margin-top: 25px;
+	margin-top: 4.5%;
 }
 </style>

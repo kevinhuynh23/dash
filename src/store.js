@@ -13,6 +13,8 @@ export const store = new Vuex.Store({
     startTime: 0,
     endTime: 1545184480293,
     path: '',
-    dataType: ''
+    dataType: '',
+    datasets: []
+    //
   }
 })

@@ -1,19 +1,17 @@
 <template>
   <v-app style="background: gray;">
-    <div class="navigation">
-    <!-- <navigation/> -->
-    </div>
+    
     <!-- <Menu/> -->
     <metricsidebar/>
 
     <!-- Renders the page header. -->
-    <!-- <v-toolbar app id="header">
+    <v-toolbar app id="header">
       <v-toolbar-title class="headline center text-uppercase">
         <span id="t1">Square</span>
         <span id="t2" class="font-weight-light">DASHBOARD</span>
       </v-toolbar-title>
-    </v-toolbar> -->
-    <v-jumbotron :gradient="gradient" height=50px color=black dark>
+    </v-toolbar>
+    <!-- <v-jumbotron :gradient="gradient" height=50px color=black dark>
       <v-container fill-height>
         <v-layout align-center>
           <v-flex text-xs-center>
@@ -21,7 +19,7 @@
           </v-flex>
         </v-layout>
       </v-container>
-    </v-jumbotron>
+    </v-jumbotron> -->
 
     <!-- Renders the card content. -->
     <div>
@@ -68,11 +66,5 @@ export default {
 }
 v-app {
   background-color: lightgrey;
-}
-.navigation {
-  z-index: 1000;
-  width: 200px;
-  position: fixed;
-  margin-top:100px;
 }
 </style>
