@@ -1,6 +1,9 @@
 <template>
 <!-- Just mock data, delete later. -->
+<div>
     <canvas ref="myChart"></canvas>
+    <!-- <v-btn @click="renderChart()">Render</v-btn> -->
+</div>
 </template>
 
 <script>
@@ -18,8 +21,15 @@ export default {
         },
         options: Object
     },
+    watch: {
+        datasets() {
+            console.log('datasets changed on chart', JSON.stringify(this.datasets, null, 2));
+            this.chart.data.datasets = this.datasets;
+            this.chart.update();
+        }
+    },
     mounted() {
-        new Chart(this.$refs.myChart, {
+        this.chart = new Chart(this.$refs.myChart, {
             type: 'line',
             data: {
                 labels: this.labels,
@@ -27,7 +37,7 @@ export default {
             },
             options: this.options
         });
-    }
+    },
 }
 </script>
 

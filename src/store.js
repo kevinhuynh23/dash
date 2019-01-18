@@ -1,23 +1,31 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+/* eslint-disable no-param-reassign */
+
+import Vue from 'vue';
+import Vuex from 'vuex';
 import 'es6-promise/auto';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-export const store = new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     title: 'Metric',
     freq: ['Hour', 'Week', 'Month', 'Year'],
     data: null,
-    path: 'Testing'
+    apiObject: [],
+    startTime: 0,
+    endTime: 1545184480293,
+    path: '',
+    dataType: '',
+    datasets: [],
   },
-  mutations: { //always synchronous
-    
+  mutations: {
+    updateChart(state, data) {
+      state.datasets = data;
+    },
+    addApi(state, api) {
+      state.apiObject.push(api);
+    },
   },
-  actions: { // or asynchronous
-    
-  },
-  getters: { // get all the same thing, all components can grab, less repetition
-    
-  }
-})
+});
+
+export default store;

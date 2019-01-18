@@ -1,8 +1,8 @@
 <template>
 <!-- Just mock data, delete later. -->
     <LineChart
-        :labels="['January', 'February', 'March', 'April', 'May']"
-        :datasets="$options.datasets"
+        :labels="['1', '2', '3', '4', '5']"
+        :datasets="datasets"
         :options="$options.options"
     ></LineChart>
 </template>
@@ -11,20 +11,7 @@
 import LineChart from '../components/LineChartTemplate'; 
 import numeral from 'numeral';
 
-const datasets = [
-    {
-        label: 'Facebook',
-        borderColor: 'rgba(0, 122, 255, .5)',
-        backgroundColor: 'rgba(0, 122, 255, .1)',
-        data: [300, 700, 450, 750, 450]
-    },
-    {
-        label: 'Google',
-        borderColor: 'rgba(90, 200, 250, 0.5)',
-        backgroundColor: 'rgba(90, 200, 250, 0.1)',
-        data: [600, 550, 750, 250, 700]
-    }
-];
+
 
 const options = {
     scales: {
@@ -32,17 +19,37 @@ const options = {
             ticks: {
                 beginAtZero: true,
             }
-        }]
+        }],
+    layout: {
+        padding: {
+            left:50,
+            right:50,
+            top:50,
+            bottom:50
+        },
+    }
   },
 };
 
 export default {
-    name: 'MyChart',
-    datasets,
+    name: 'myChart',
     options,
     components: {
         LineChart
+    },
+    computed: {
+        datasets (){
+            return this.$store.state.datasets;
+        }
+    },
+    watch: {
+        datasets() {
+            console.log('this.datasets changed');
+            console.log(JSON.stringify(this.datasets, null, 2));
+            console.log(JSON.stringify(this.$store.state.datasets, null, 2));
+        }
     }
+
 }
 </script>
 
