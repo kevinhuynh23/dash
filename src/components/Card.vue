@@ -82,7 +82,7 @@ export default {
 		}
 	},
 	components: {
-		Chart, //Mock data
+		Chart, //Mock data 
 		Table, //'' 
 		DatePicker
 	},
@@ -169,13 +169,22 @@ export default {
 					return response.data
 				})
 				.then((sourceSet) => {
+					const promises = [];
 					for(let i = 0; i < sourceSet.length; i++) {
-						datasets.push(this.dataset(sourceSet[i], data))
+						promises.push(
+							this.dataset(sourceSet[i], data)
+							.then((dataset) => {
+								datasets.push(dataset);
+							})
+						);
 					}
+					return Promise.all(promises);
+				})
+				.then(() => {
+					this.$store.commit('updateChart', datasets);
+					console.log(JSON.stringify(datasets, null, 2));
 				})
 				.catch((err) => console.log(err.message));
-
-			this.$store.commit('updateChart', datasets);
 		},
 
 		dataset(source, data) {
@@ -187,7 +196,7 @@ export default {
 				data:[]
 			}
 
-			axios
+			return axios
 				.get(data)
 				.then((response) => {
 					return response.data
@@ -204,15 +213,12 @@ export default {
 					});
 
 					return sortable;
-
-
 				})
 				.then((sortable) => {
 					dataset.data = this.parseDataset(sortable);
+					return dataset;
 				})
 				.catch((err) => console.log(err.message));
-			
-			return dataset;
 		},
 		parseDataset(sortable) {
 			let data = [];

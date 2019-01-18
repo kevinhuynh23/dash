@@ -1,10 +1,12 @@
+/* eslint-disable no-param-reassign */
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 import 'es6-promise/auto';
 
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     title: 'Metric',
     freq: ['Hour', 'Week', 'Month', 'Year'],
@@ -14,14 +16,16 @@ export const store = new Vuex.Store({
     endTime: 1545184480293,
     path: '',
     dataType: '',
-    datasets:[]
+    datasets: [],
   },
   mutations: {
-    updateChart (state, data) {
+    updateChart(state, data) {
       state.datasets = data;
     },
     addApi(state, api) {
-      state.apiObject.push(api)
-    }
-  }
+      state.apiObject.push(api);
+    },
+  },
 });
+
+export default store;

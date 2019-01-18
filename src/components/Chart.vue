@@ -41,6 +41,13 @@ export default {
         datasets (){
             return this.$store.state.datasets;
         }
+    },
+    watch: {
+        datasets() {
+            console.log('this.datasets changed');
+            console.log(JSON.stringify(this.datasets, null, 2));
+            console.log(JSON.stringify(this.$store.state.datasets, null, 2));
+        }
     }
 
 }

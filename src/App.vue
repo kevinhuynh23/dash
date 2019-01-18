@@ -39,6 +39,7 @@ import navigation from './components/Navigation'
 
 Vue.use(Vuex)
 
+
 export default {
   name: 'App',
   data: () => ({
