@@ -29,7 +29,7 @@
     "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-airbnb": "^7.0.0",
     "eslint": "^8.47.0",
-    "eslint-plugin-vue": "^9.16.1",
+    "eslint-plugin-vue": "^9.17.0",
     "node-sass": "^9.0.0",
     "sass-loader": "^13.3.2",
     "stylus": "^0.59.0",
