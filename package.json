@@ -20,7 +20,7 @@
     "vue-sidebar-menu": "^5.2.11",
     "vue-sticky": "^3.3.4",
     "vue2-datepicker": "^3.11.1",
-    "vuetify": "^3.3.17",
+    "vuetify": "^3.3.19",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
